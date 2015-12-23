@@ -13,7 +13,7 @@ The arguments to this app are:
 ```dest dir``` - the directory to write the output files to
 
 ```output options``` - JSON, parquet, test.<br> 
-JSON and parquet will generate the outut using the specified format. test will not generate output file and only write the schema out
+JSON and parquet will generate the outut using the specified format. test will not generate output file and only write out the schema
 
  The other option is to use ```spark-shell``` and paste the scala code in and let it run.
  for this to work, make sure you don't paste ```extractJSONDriver``` code which creates ```SparkContext``` & ```SQLContext```
