@@ -37,16 +37,17 @@ object GZipHelper {
   }
 }
 
+
+object outputOptions extends Enumeration {
+  type outputOptions = Value
+  val json,parquet,test = Value
+}
+
 class ExtractJSON {
-  object outputFormat extends Enumeration {
-    type outputFormat = Value
-    val json,parquet = Value
-  }
 
-  import outputFormat._
+  import outputOptions._
 
-
-  def extractJSONFiles(sc: SparkContext, sqlContext: SQLContext,sourceFilesPath: String, destFilePath: String, output: outputFormat) = {
+  def extractJSONFiles(sc: SparkContext, sqlContext: SQLContext,sourceFilesPath: String, destFilePath: String, output: outputOptions) = {
     // Read all JSON files in a directory
     val jsonData = sqlContext.read.json(sourceFilesPath)
     // print the json schema
@@ -63,34 +64,46 @@ class ExtractJSON {
         schemaString.split(" ").map(fieldName => StructField(fieldName, StringType, true)))
 
     val unzipJSON = sqlContext.createDataFrame(jsonGzip, schema)
-    val outputFileName = "extracted-"
+    val outputFileName = destFilePath + "extracted-" + output
     output match {
-      case outputFormat.json => unzipJSON.coalesce(1).write.mode("Overwrite").json(destFilePath + outputFileName + outputFormat.json)
-      case outputFormat.parquet => unzipJSON.write.mode("Overwrite").parquet(destFilePath + outputFileName + outputFormat.parquet)
+      case outputOptions.json => unzipJSON.coalesce(1).write.mode("Overwrite").json(outputFileName )
+      case outputOptions.parquet => unzipJSON.write.mode("Overwrite").parquet(outputFileName)
+      case outputOptions.test =>
+        println("**** SOURCE schema ****")
+        jsonData.printSchema()
+        println("**** DEST schema ****")
+        unzipJSON.printSchema()
     }
-
   }
 }
 
 object extractJSONDriver{
-  def main(agrs: Array[String]): Unit = {
 
+  import outputOptions._
+
+  def main(args: Array[String]): Unit = {
+
+    // to be used in spark-submit only
+    // Don't paste this code to spark-shell
     val conf = new SparkConf().setAppName("Spark unZip JSON")
     conf.set("spark.eventLog.enabled","true")
     conf.set("spark.eventLog.dir","/usr/local/spark/history/log")
     conf.set("spark.driver.memory","5G")
     val sc = new SparkContext(conf)
     val sqlContext = new SQLContext(sc)
+    // End of spark-submit only
 
+    val ej = new ExtractJSON()
+    case class ExtractJsonArgs (source: String,dest: String,options: outputOptions)
+    // /home/eranw/Workspace/sparkJsonSample/gzipSample
+    // /home/eranw/Workspace/sparkJsonSample/extractedOutput
+    val outputOption = args(2).toLowerCase match {case "json" => outputOptions.json case "parquet" => outputOptions.parquet case "test" => outputOptions.test}
+    val extractJsonArgs = new ExtractJsonArgs(args(0),args(1),outputOption)
 
     // disable generation of the metadata files
     sc.hadoopConfiguration.set("parquet.enable.summary-metadata", "false")
     // disable the _SUCCESS file
     sc.hadoopConfiguration.set("mapreduce.fileoutputcommitter.marksuccessfuljobs", "false")
-
-    val ej = new ExtractJSON()
-
-    ej.extractJSONFiles(sc,sqlContext,"/home/eranw/Workspace/sparkJsonSample/gzipSample","/home/eranw/Workspace/sparkJsonSample/extractedOutput/",ej.outputFormat.json)
-    ej.extractJSONFiles(sc,sqlContext,"/home/eranw/Workspace/sparkJsonSample/gzipSample","/home/eranw/Workspace/sparkJsonSample/extractedOutput/",ej.outputFormat.parquet)
+    ej.extractJSONFiles(sc, sqlContext, extractJsonArgs.source, extractJsonArgs.dest, outputOption)
   }
 }
