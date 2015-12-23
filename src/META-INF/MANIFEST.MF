@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Class-Path: spark-assembly-1.5.2-hadoop2.6.0.jar scala-library-2.10.6.
+ jar scala-reflect-2.10.6.jar
+Main-Class: extractJSONDriver
+
