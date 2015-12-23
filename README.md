@@ -3,6 +3,8 @@ Demonstrate how to use Spark & Scala to extract a GZIP JSON within JSON
 
 ## How to use this demo?
 
+** Note This code works with the provided sample files, to use with other files ExtractJSON should be changed **
+
 Best way to use this demo is by taking the JAR from the artifacts directory and using spark-submit:
 
 ### Running using spark-submit:

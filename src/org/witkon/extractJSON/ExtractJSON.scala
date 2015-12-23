@@ -17,8 +17,7 @@ class ExtractJSON {
   def extractJSONFiles(sc: SparkContext, sqlContext: SQLContext,sourceFilesPath: String, destFilePath: String, output: outputOptions) = {
     // Read all JSON files in a directory
     val jsonData = sqlContext.read.json(sourceFilesPath)
-    // print the json schema
-    //jsonData.printSchema()
+
     //loop through the DataFrame and manipulate the gzip Filed
     val jsonGzip = jsonData.map(r => Row(r.getString(0), GZipHelper.unCompress(r.getString(1)).get, r.getString(2), r.getString(3)))
 
