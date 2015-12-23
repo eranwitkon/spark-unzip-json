@@ -76,6 +76,9 @@ object extractJSONDriver{
   def main(agrs: Array[String]): Unit = {
 
     val conf = new SparkConf().setAppName("Spark unZip JSON")
+    conf.set("spark.eventLog.enabled","true")
+    conf.set("spark.eventLog.dir","/usr/local/spark/history/log")
+    conf.set("spark.driver.memory","5G")
     val sc = new SparkContext(conf)
     val sqlContext = new SQLContext(sc)
 
