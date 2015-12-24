@@ -24,7 +24,7 @@ object extractJSONDriver {
     val ej = new ExtractJSON()
     case class ExtractJsonArgs (source: String,dest: String,options: outputOptions)
     // /home/eranw/Workspace/sparkJsonSample/gzipSample
-    // /home/eranw/Workspace/sparkJsonSample/extractedOutput
+    // /home/eranw/Workspace/sparkJsonSample/extractedOutput/
     val outputOption = args(2).toLowerCase match {case "json" => outputOptions.json case "parquet" => outputOptions.parquet case "test" => outputOptions.test}
     val extractJsonArgs = new ExtractJsonArgs(args(0),args(1),outputOption)
 
