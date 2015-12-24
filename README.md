@@ -1,6 +1,33 @@
 # spark-unzip-json
 Demonstrate how to use Spark & Scala to extract a GZIP JSON within JSON
 
+This code shows how to take a compressed JSON field within a JSON file, extract is and generate a nested JSON.
+
+* Source schema *
+
+root
+ |-- cty: string (nullable = true)
+ |-- gzip: string (nullable = true)
+ |-- nm: string (nullable = true)
+ |-- yrs: string (nullable = true)
+ 
+* Dest schema *
+
+
+```
+root
+
+ |-- cty: string (nullable = true)
+
+ |-- extractedJson: struct (nullable = true)
+ |    |-- cty: string (nullable = true)
+ |    |-- hse: string (nullable = true)
+ |    |-- nm: string (nullable = true)
+ |    |-- yrs: string (nullable = true)
+ |-- nm: string (nullable = true)
+ |-- yrs: string (nullable = true)
+```
+
 ## How to use this demo?
 
 ** Note This code works with the provided sample files, to use with other files ExtractJSON should be changed **
