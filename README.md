@@ -11,6 +11,11 @@ This code shows how to take a compressed JSON field within a JSON file, extract 
  |-- nm: string (nullable = true)
  |-- yrs: string (nullable = true)
 ```
+* Source data sample *
+```
+{"cty":"United Kingdom","gzip":"H4sIAAAAAAAAAKtWystVslJQcs4rLVHSUUouqQTxQvMyS1JTFLwz89JT8nOB4hnFqSBxj/zS4lSF/DQFl9S83MSibKBMZVExSMbQwNBM19DA2FSpFgDvJUGVUwAAAA==","nm":"Cnut","yrs":"1016-1035"}
+```
+
 * Dest schema *
 
 ```
@@ -23,6 +28,11 @@ root
  |    |-- yrs: string (nullable = true)
  |-- nm: string (nullable = true)
  |-- yrs: string (nullable = true)
+```
+
+* Dest data sample *
+```
+{"cty":"United Kingdom","extractedJson":{"cty":"United Kingdom","hse":"House of Denmark","nm":"Cnut","yrs":"1016-1035"},"nm":"Edmund lronside","yrs":"1016"}
 ```
 
 ## How to use this demo?
