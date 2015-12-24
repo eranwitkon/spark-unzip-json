@@ -7,7 +7,7 @@ import java.util.zip.{GZIPInputStream, GZIPOutputStream}
 /**
   * Created by eranw on 23/12/15.
   */
-object GZipHelper {
+object GZipHelper extends java.io.Serializable{
   def convertStreamToString(inStream: InputStream): String = {
     val s = new java.util.Scanner(inStream).useDelimiter("\\A");
     if (s.hasNext()) s.next() else "";
