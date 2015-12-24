@@ -5,20 +5,17 @@ This code shows how to take a compressed JSON field within a JSON file, extract 
 
 * Source schema *
 
-root
+```root
  |-- cty: string (nullable = true)
  |-- gzip: string (nullable = true)
  |-- nm: string (nullable = true)
  |-- yrs: string (nullable = true)
- 
+```
 * Dest schema *
-
 
 ```
 root
-
  |-- cty: string (nullable = true)
-
  |-- extractedJson: struct (nullable = true)
  |    |-- cty: string (nullable = true)
  |    |-- hse: string (nullable = true)
@@ -53,5 +50,10 @@ JSON and parquet will generate the outut using the specified format. test will n
 ```$SPARK_HOME/bin/spark-submit --master local[2] --class org.witkon.extractJSON.extractJSONDriver /home/eranw/sparkJSONSample/sparkJsonSample.jar /home/eranw/Workspace/sparkJsonSample/gzipSample /home/eranw/Workspace/sparkJsonSample/extractedOutput test```
 
 ### Running using spark-shell:
- The other option is to use ```spark-shell``` and paste the scala code in and let it run.
- for this to work, make sure you don't paste ```extractJSONDriver``` code which creates ```SparkContext``` & ```SQLContext```
+ The other option is to run ```spark-shell``` 
+  click ```:p```
+  and paste the code in file `spark-shell-testing.scala` 
+  then ```Ctrl-D```
+  
+  Make sure you update both ```sourceFilesPath``` and ```destFilePath``` before pasting it to ```spark-shell```
+  
