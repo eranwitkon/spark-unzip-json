@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Class-Path: scala-library-2.10.6.jar scala-reflect-2.10.6.jar spark-as
+ sembly-1.5.2-hadoop2.6.0.jar
+Main-Class: org.witkon.extractJSON.extractJSONDriver
+

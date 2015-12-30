@@ -1,5 +1,6 @@
 /**
   * Created by eranw on 24/12/15.
+  * Paste this code into sparkShell and run
   */
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream, InputStream}
@@ -47,6 +48,7 @@ sc.hadoopConfiguration.set("mapreduce.fileoutputcommitter.marksuccessfuljobs", "
 import org.apache.spark._
 import org.apache.spark.sql._
 
+// Update this pass to match your own
 val sourceFilesPath = "/home/eranw/Workspace/sparkJsonSample/gzipSample"
 val jsonData = sqlContext.read.json(sourceFilesPath)
 val jsonUnGzip = jsonData.map(r => Row(r.getString(0), GZipHelper.unCompress(r.getString(1)).get, r.getString(2), r.getString(3)))
@@ -54,6 +56,7 @@ val jsonUnGzip = jsonData.map(r => Row(r.getString(0), GZipHelper.unCompress(r.g
 val jsonNested = sqlContext.read.json(jsonUnGzip.map{case Row(cty:String, json:String,nm:String,yrs:String) => s"""{"cty": \"$cty\", "extractedJson": $json , "nm": \"$nm\" , "yrs": \"$yrs\"}"""})
 
 val output = "json"
+// Update this pass to match your own
 val destFilePath = "/home/eranw/Workspace/sparkJsonSample/extractedOutput/"
 val outputFileName = destFilePath + "extracted-" + output
 jsonNested.coalesce(1).write.mode("Overwrite").json(outputFileName )
