@@ -23,15 +23,22 @@ object extractJSONDriver {
 
     val ej = new ExtractJSON()
     case class ExtractJsonArgs (source: String,dest: String,options: outputOptions)
-    // /home/eranw/Workspace/sparkJsonSample/gzipSample
-    // /home/eranw/Workspace/sparkJsonSample/extractedOutput/
-    val outputOption = args(2).toLowerCase match {case "json" => outputOptions.json case "parquet" => outputOptions.parquet case "test" => outputOptions.test}
-    val extractJsonArgs = new ExtractJsonArgs(args(0),args(1),outputOption)
-
+    val extractJsonArgs = {
+      if (args.length==0) {
+        new ExtractJsonArgs("/home/eranw/Workspace/sparkJsonSample/gzipSample", "/home/eranw/Workspace/sparkJsonSample/extractedOutput/", outputOptions.test)
+      }else {
+        val outputOption = args(2).toLowerCase match {
+          case "json" => outputOptions.json
+          case "parquet" => outputOptions.parquet
+          case "test" => outputOptions.test
+        }
+        new ExtractJsonArgs(args(0), args(1), outputOption)
+      }
+    }
     // disable generation of the metadata files
     sc.hadoopConfiguration.set("parquet.enable.summary-metadata", "false")
     // disable the _SUCCESS file
     sc.hadoopConfiguration.set("mapreduce.fileoutputcommitter.marksuccessfuljobs", "false")
-    ej.extractJSONFiles(sc, sqlContext, extractJsonArgs.source, extractJsonArgs.dest, outputOption)
+    ej.extractJSONFiles(sc, sqlContext, extractJsonArgs.source, extractJsonArgs.dest, extractJsonArgs.options)
   }
 }
